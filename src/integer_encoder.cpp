@@ -12,13 +12,22 @@ AlignedBuffer IntegerEncoder::encode(const std::vector<uint64_t> &values) {
   std::vector<uint64_t> encoded;
   encoded.reserve(values.size());
 
+  if (values.size() == 0)
+    return Simple8B::encode(encoded);
+
   uint64_t start_value = values[0];
   encoded.push_back(start_value);
+
+  if (values.size() == 1)
+    return Simple8B::encode(encoded);
 
   int64_t delta = values[1] - values[0];
   uint64_t first_delta = ZigZag::zigzagEncode(delta);
 
   encoded.push_back(first_delta);
+
+  if (values.size() == 2)
+    return Simple8B::encode(encoded);
 
   for (unsigned int i = 2; i < values.size(); i++) {
     int64_t D = (values[i] - values[i - 1]) - (values[i - 1] - values[i - 2]);

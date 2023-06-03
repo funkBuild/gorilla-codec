@@ -533,6 +533,15 @@ napi_value Encode(napi_env env, napi_callback_info info) {
       napi_value element;
       napi_get_element(env, valuesValue, i, &element);
 
+      napi_valuetype itemType;
+      napi_typeof(env, element, &itemType);
+
+      // Throw if not a number
+      if (itemType != napi_number) {
+        napi_throw_type_error(env, nullptr, "Values must all be numbers");
+        return nullptr;
+      }
+
       double num;
       napi_get_value_double(env, element, &num);
       numbers.push_back(num);
@@ -547,6 +556,15 @@ napi_value Encode(napi_env env, napi_callback_info info) {
     for (uint32_t i = 0; i < numValues; i++) {
       napi_value element;
       napi_get_element(env, valuesValue, i, &element);
+
+      // Throw if not a napi_bigint
+      napi_valuetype itemType;
+      napi_typeof(env, element, &itemType);
+
+      if (itemType != napi_bigint) {
+        napi_throw_type_error(env, nullptr, "Values must all be bigints");
+        return nullptr;
+      }
 
       int64_t num;
       napi_get_value_bigint_int64(env, element, &num,
@@ -565,6 +583,15 @@ napi_value Encode(napi_env env, napi_callback_info info) {
       napi_value element;
       napi_get_element(env, valuesValue, i, &element);
 
+      // Throw if not a napi_boolean
+      napi_valuetype itemType;
+      napi_typeof(env, element, &itemType);
+
+      if (itemType != napi_boolean) {
+        napi_throw_type_error(env, nullptr, "Values must all be boolean");
+        return nullptr;
+      }
+
       bool num;
       napi_get_value_bool(env, element, &num);
       numbers.push_back(num);
@@ -581,6 +608,15 @@ napi_value Encode(napi_env env, napi_callback_info info) {
     for (uint32_t i = 0; i < numValues; i++) {
       napi_value element;
       napi_get_element(env, valuesValue, i, &element);
+
+      // Throw if not a napi_boolean
+      napi_valuetype itemType;
+      napi_typeof(env, element, &itemType);
+
+      if (itemType != napi_string) {
+        napi_throw_type_error(env, nullptr, "Values must all be strings");
+        return nullptr;
+      }
 
       size_t str_length;
       napi_get_value_string_utf8(env, element, nullptr, 0, &str_length);

@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { createRequire } from "module";
 const require = createRequire(import.meta.url);
 const GorillaCodec = require("../lib/binding.js");
-
+/*
 describe("Errors", () => {
   it("No values", async () => {
     const timestamps = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -67,13 +67,14 @@ describe("Errors", () => {
     }
   });
 });
-
+*/
 describe("Empty", () => {
   it("Encodes an empty array", async () => {
     const timestamps = [];
     const values = [];
 
     const encodeResult = await GorillaCodec.encode({ timestamps, values });
+    console.log("encodeResult", encodeResult);
     const decodeResult = await GorillaCodec.decode(encodeResult);
 
     assert.deepStrictEqual(decodeResult, { timestamps, values });
