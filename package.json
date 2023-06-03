@@ -1,0 +1,16 @@
+{
+  "main": "lib/binding.js",
+  "dependencies": {
+    "node-addon-api": "^1.1.0"
+  },
+  "scripts": {
+    "test": "node --napi-modules ./test/test_binding.mjs",
+    "fuzz": "node --napi-modules test/fuzz.mjs"
+  },
+  "gypfile": true,
+  "name": "gorilla-codec",
+  "version": "1.0.0",
+  "description": "Time series compression based on the Facebook Gorilla paper",
+  "author": "",
+  "license": "MIT"
+}
