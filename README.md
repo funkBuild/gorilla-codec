@@ -14,31 +14,41 @@ npm install gorilla-codec
 
 The module provides two main functions, encode and decode.
 
-#`encode`
+### `encode`
+
 The encode function accepts a hash containing two arrays: timestamps and values. The timestamps array should contain integers, representing moments in time. The values array can contain integers, strings, floats or booleans, representing the data associated with each timestamp.
 
-```
-const GorillaCodec = require('gorilla-codec');
+```mjs
+import GorillaCodec from "gorilla-codec";
+
 const data = {
   timestamps: [1, 2, 3],
-  values: [10, 20, 30]
+  values: [10, 20, 30],
 };
-const encodedBuffer = GorillaCodec.encode(data);
+
+const encodedBuffer = await GorillaCodec.encode(data);
 ```
 
 The `encode` function returns a Node.js Buffer containing the compressed data.
 
-`decode`
+### `decode`
+
 The decode function accepts a Buffer, which it decodes to return the original timestamps and values.
 
-```
-const decodedData = GorillaCodec.decode(encodedBuffer);
-console.log(decodedData);  // Outputs: { timestamps: [1, 2, 3], values: [10, 20, 30] }
+```mjs
+import GorillaCodec from "gorilla-codec";
+
+const decodedData = await GorillaCodec.decode(encodedBuffer);
+
+console.dir(decodedData); // Outputs: { timestamps: [1, 2, 3], values: [10, 20, 30] }
 ```
 
-Notes
-Please ensure your timestamps array only contains integers, and your values array only contains integers, strings, floats or booleans. Inconsistent or incorrect data types can lead to errors or unexpected behavior.
+## Notes
 
-License
+Please ensure your timestamps array only contains integers, and your values array only contains one type of data for all entries and has a type of either `Number`, `String`, `Bigint` or `Bool`. Inconsistent or incorrect data types will give an error.
+
+## License
+
 MIT
+
 You can modify the Installation, Usage, Notes, and License sections to suit your specific needs and requirements. You may also want to add sections for contributing, a changelog, and more detailed information about the algorithm and its usage.
