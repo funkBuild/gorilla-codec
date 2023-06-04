@@ -9,7 +9,7 @@
   },
   "gypfile": true,
   "name": "gorilla-codec",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Time series compression based on the Facebook Gorilla paper",
   "author": "Matt Anderson",
   "license": "MIT"
