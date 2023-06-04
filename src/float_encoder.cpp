@@ -22,8 +22,8 @@ CompressedBuffer FloatEncoder::encode(const std::vector<double> &values) {
     if (xor_value == 0) {
       buffer.writeFixed<0b0, 1>();
     } else {
-      auto lzb = getLeadingZeroBits(xor_value);
-      const auto tzb = getTrailingZeroBits(xor_value);
+      int lzb = getLeadingZeroBits(xor_value);
+      const int tzb = getTrailingZeroBits(xor_value);
 
       if (data_bits != 0 && prev_lzb <= lzb && prev_tzb <= tzb) {
         buffer.writeFixed<0b01, 2>();
@@ -47,7 +47,7 @@ CompressedBuffer FloatEncoder::encode(const std::vector<double> &values) {
     last_value = current_value;
   }
 
-  return std::move(buffer);
+  return buffer;
 };
 
 void FloatEncoder::decode(CompressedSlice &values, std::vector<double> &out,
@@ -55,9 +55,10 @@ void FloatEncoder::decode(CompressedSlice &values, std::vector<double> &out,
   uint64_t last_value = values.readFixed<uint64_t, 64>();
   uint64_t tzb = 0;
   uint64_t data_bits = 0;
-  unsigned int count = 0;
+  double value;
 
-  out.push_back(reinterpret_cast<double &>(last_value));
+  std::memcpy(&value, &last_value, sizeof(double));
+  out.push_back(value);
 
   while (!values.isAtEnd() && out.size() < size) {
     if (values.readBit()) {
@@ -71,6 +72,7 @@ void FloatEncoder::decode(CompressedSlice &values, std::vector<double> &out,
       last_value = last_value ^ decoded_value;
     }
 
-    out.push_back(reinterpret_cast<double &>(last_value));
+    std::memcpy(&value, &last_value, sizeof(double));
+    out.push_back(value);
   }
 }

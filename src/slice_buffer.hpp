@@ -9,15 +9,15 @@
 
 class CompressedSlice {
 private:
-  size_t length_;
+  size_t length_ = 0;
   size_t offset = 0;
   int bitOffset = 0;
 
 public:
-  const uint64_t *data;
+  const uint64_t *data = nullptr;
 
   CompressedSlice(const uint8_t *_data, size_t _length)
-      : data((uint64_t *)_data), length_(_length / 8){};
+      : length_(_length / 8), data((uint64_t *)_data){};
 
   template <typename T> T read(const int bits) {
     if (bitOffset > 63) {
@@ -130,7 +130,7 @@ public:
 
     offset += byteLength;
 
-    return std::move(thisString);
+    return thisString;
   }
 
   size_t bytesLeft() { return length_ - offset; }
@@ -141,7 +141,7 @@ public:
 
     offset += byteLength;
 
-    return std::move(slice);
+    return slice;
   }
 
   CompressedSlice getCompressedSlice(size_t byteLength) {
@@ -150,7 +150,7 @@ public:
 
     offset += byteLength;
 
-    return std::move(slice);
+    return slice;
   }
 
   template <class T> T read(size_t offset) {

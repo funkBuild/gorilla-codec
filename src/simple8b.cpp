@@ -4,7 +4,7 @@
 #include <iostream>
 
 AlignedBuffer Simple8B::encode(std::vector<uint64_t> &values) {
-  int offset = 0;
+  size_t offset = 0;
   AlignedBuffer buffer;
 
   while (offset < values.size()) {
@@ -77,7 +77,7 @@ AlignedBuffer Simple8B::encode(std::vector<uint64_t> &values) {
     }
   }
 
-  return std::move(buffer);
+  return buffer;
 }
 
 std::vector<uint64_t> Simple8B::decode(Slice &encoded) {
@@ -147,7 +147,7 @@ std::vector<uint64_t> Simple8B::decode(Slice &encoded) {
 
 template <uint64_t n, uint64_t bits>
 bool Simple8B::canPack(std::vector<uint64_t> &values, int offset) {
-  int remaining = values.size() - offset;
+  const size_t remaining = values.size() - offset;
   if (remaining < n)
     return false;
 
@@ -156,9 +156,9 @@ bool Simple8B::canPack(std::vector<uint64_t> &values, int offset) {
     return false;
   }
 
-  uint64_t max = (1ull << bits) - 1;
+  const uint64_t max = (1ull << bits) - 1;
 
-  for (int i = offset; i < (offset + n); i++) {
+  for (size_t i = offset; i < (offset + n); i++) {
     if (values[i] > max)
       return false;
   }
@@ -167,7 +167,7 @@ bool Simple8B::canPack(std::vector<uint64_t> &values, int offset) {
 }
 
 template <uint64_t selector, uint64_t n, uint64_t bits>
-uint64_t Simple8B::pack(std::vector<uint64_t> &values, int &offset) {
+uint64_t Simple8B::pack(std::vector<uint64_t> &values, size_t &offset) {
   uint64_t out = selector << 60;
 
   for (unsigned int i = 0; i < n; i++) {
@@ -182,7 +182,6 @@ uint64_t Simple8B::pack(std::vector<uint64_t> &values, int &offset) {
 template <uint64_t n, uint64_t bits>
 void Simple8B::unpack(uint64_t value, std::vector<uint64_t> &out) {
   const uint64_t mask = (1ull << bits) - 1;
-  unsigned int shiftAmount = 0;
 
   // TODO: Validate fold expression
 
@@ -192,12 +191,4 @@ void Simple8B::unpack(uint64_t value, std::vector<uint64_t> &out) {
     uint64_t v = (value >> shiftAmount) & mask;
     out.push_back(v);
   });
-
-  /*
-    for(int i=0; i < n; i++){
-      uint64_t v = (value >> shiftAmount) & mask;
-      out.push_back(v);
-      shiftAmount += bits;
-    }
-    */
 }

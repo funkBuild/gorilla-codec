@@ -19,7 +19,7 @@ public:
   static bool canPack(std::vector<uint64_t> &values, int offset);
 
   template <uint64_t selector, uint64_t n, uint64_t bits>
-  static uint64_t pack(std::vector<uint64_t> &values, int &offset);
+  static uint64_t pack(std::vector<uint64_t> &values, size_t &offset);
 
   template <uint64_t n, uint64_t bits>
   static inline void unpack(uint64_t value, std::vector<uint64_t> &out);

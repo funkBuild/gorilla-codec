@@ -70,7 +70,6 @@ void CompressFloats(CompressionCarrier *carrier) {
 void CompressStrings(CompressionCarrier *carrier) {
   std::vector<std::string> &strings =
       std::get<std::vector<std::string>>(carrier->values);
-  unsigned int numStrings = strings.size();
 
   std::string concatenatedData;
 
@@ -288,7 +287,6 @@ void ExecuteDecompression(napi_env env, void *data) {
   CompressionCarrier *carrier = static_cast<CompressionCarrier *>(data);
 
   if (carrier->compressedData[0] == SNAPPY) {
-    printf("Decompressing Snappy data\n");
     // Get the size of the data
     const char *data = (const char *)carrier->compressedData.data() + 1;
 
@@ -303,7 +301,6 @@ void ExecuteDecompression(napi_env env, void *data) {
 
   int offset = 0;
 
-  const uint8_t timestampCompressionType = carrier->compressedData[offset];
   offset += sizeof(uint8_t);
 
   const uint32_t *itemCount =
@@ -350,7 +347,6 @@ void ExecuteDecompression(napi_env env, void *data) {
     break;
   }
   default: {
-    printf("Unknown compression type: %d\n", compressionType);
     break;
   }
   }
