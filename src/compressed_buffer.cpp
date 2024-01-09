@@ -26,7 +26,8 @@ void CompressedBuffer::write(uint64_t value, int bits) {
   }
 }
 
-template <int bits> void CompressedBuffer::write(uint64_t value) {
+template <int bits>
+void CompressedBuffer::write(uint64_t value) {
   if (bitOffset > 63 || data.size() == 0) {
     if (data.size() != 0) {
       offset++;
@@ -49,7 +50,8 @@ template <int bits> void CompressedBuffer::write(uint64_t value) {
   }
 }
 
-template <uint64_t value, int bits> void CompressedBuffer::writeFixed() {
+template <uint64_t value, int bits>
+void CompressedBuffer::writeFixed() {
   if (bitOffset > 63 || data.size() == 0) {
     if (data.size() != 0) {
       offset++;
@@ -61,8 +63,7 @@ template <uint64_t value, int bits> void CompressedBuffer::writeFixed() {
 
   // Happy path for single bit writes
   if (bits == 1) {
-    if (value == 1)
-      data[offset] |= value << bitOffset;
+    if (value == 1) data[offset] |= value << bitOffset;
     bitOffset++;
     return;
   }
@@ -80,7 +81,8 @@ template <uint64_t value, int bits> void CompressedBuffer::writeFixed() {
   }
 }
 
-template <typename T> T CompressedBuffer::read(const int bits) {
+template <typename T>
+T CompressedBuffer::read(const int bits) {
   if (bitOffset > 63) {
     offset++;
     bitOffset = 0;
@@ -88,8 +90,7 @@ template <typename T> T CompressedBuffer::read(const int bits) {
 
   const int leftover_bits = bits - (64 - bitOffset);
   const int bits_read = leftover_bits > 0 ? bits - leftover_bits : bits;
-  const uint64_t mask =
-      bits_read == 64 ? 0xffffffffffffffff : (1ull << bits_read) - 1;
+  const uint64_t mask = bits_read == 64 ? 0xffffffffffffffff : (1ull << bits_read) - 1;
 
   uint64_t value = data[offset] >> bitOffset;
   value &= mask;
@@ -98,8 +99,7 @@ template <typename T> T CompressedBuffer::read(const int bits) {
     offset++;
     bitOffset = leftover_bits;
 
-    const uint64_t mask =
-        leftover_bits == 64 ? 0xffffffffffffffff : (1ull << leftover_bits) - 1;
+    const uint64_t mask = leftover_bits == 64 ? 0xffffffffffffffff : (1ull << leftover_bits) - 1;
     value |= (data[offset] & mask) << bits_read;
   } else {
     bitOffset += bits;
@@ -108,7 +108,8 @@ template <typename T> T CompressedBuffer::read(const int bits) {
   return value;
 }
 
-template <typename T, int bits> T CompressedBuffer::readFixed() {
+template <typename T, int bits>
+T CompressedBuffer::readFixed() {
   if (bitOffset > 63) {
     offset++;
     bitOffset = 0;
@@ -116,8 +117,7 @@ template <typename T, int bits> T CompressedBuffer::readFixed() {
 
   const int leftover_bits = bits - (64 - bitOffset);
   const int bits_read = leftover_bits > 0 ? bits - leftover_bits : bits;
-  const uint64_t mask =
-      bits_read == 64 ? 0xffffffffffffffff : (1ull << bits_read) - 1;
+  const uint64_t mask = bits_read == 64 ? 0xffffffffffffffff : (1ull << bits_read) - 1;
 
   uint64_t value = data[offset] >> bitOffset;
   value &= mask;
@@ -126,8 +126,7 @@ template <typename T, int bits> T CompressedBuffer::readFixed() {
     offset++;
     bitOffset = leftover_bits;
 
-    const uint64_t mask =
-        leftover_bits == 64 ? 0xffffffffffffffff : (1ull << leftover_bits) - 1;
+    const uint64_t mask = leftover_bits == 64 ? 0xffffffffffffffff : (1ull << leftover_bits) - 1;
     value |= (data[offset] & mask) << bits_read;
   } else {
     bitOffset += bits;
