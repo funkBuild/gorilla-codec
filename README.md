@@ -7,6 +7,7 @@ Gorilla Codec is a Node.js package that implements the Facebook Gorilla compress
 Use npm to install the Gorilla Codec:
 
 ```bash
+sudo apt-get install libsnappy-dev
 npm install gorilla-codec
 ```
 
